@@ -3,9 +3,10 @@
 from analog_buzzer import AnalogBuzzer
 from custom_neopixel import CustomNeoPixel
 from utils import get_activity_params
+from machine import  Pin
 
 
-fire_sensor=Pin(FIRE_SENSOR_PIN,Pin.IN,Pin.PULL_DOWN)
+
 
 def run_activity(activity):
     
