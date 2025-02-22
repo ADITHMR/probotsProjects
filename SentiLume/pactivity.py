@@ -1,7 +1,7 @@
 
 # ******************SentiLume: Intelligent street illumination************************
 
-from imports import *
+
 from utils import get_activity_params
 from analog_buzzer import AnalogBuzzer
 
