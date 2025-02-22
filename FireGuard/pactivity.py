@@ -1,5 +1,5 @@
 # ***********************FireGuard: Intelligent Fire Detection************************
-from imports import *
+
 from analog_buzzer import AnalogBuzzer
 from custom_neopixel import CustomNeoPixel
 from utils import get_activity_params
