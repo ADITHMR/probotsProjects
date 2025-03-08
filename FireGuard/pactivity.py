@@ -4,6 +4,9 @@ from analog_buzzer import AnalogBuzzer
 from custom_neopixel import CustomNeoPixel
 from utils import get_activity_params
 from machine import  Pin
+from pin_mapping import *
+from drivers.oled import *
+from drivers.display import  *
 
 
 
@@ -46,7 +49,7 @@ def run_activity(activity):
             #buzzer_off()
             Led_strip.set_color_All(0,0,0)
             time.sleep(.3)
-        buzzer_off()
+        
         Led_strip.set_color_All(0,255,0)
         oled_two_data(1,3,"No Fire","SAFE")
         disp_seq_str(["SAFE"],0)

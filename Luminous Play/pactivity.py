@@ -349,6 +349,8 @@ def run_activity(activity):
     led_pin = set_pin_out(params["strip_led_pin"])  # Ensure this function returns a valid Pin object
     num_pixels = int(params["led_num"])
     ir_receiver_enabled=params["remote_enabled"]
+    pin_ir=int(params["remote_pin"])
+    pin_ir=Pin(pin_ir, Pin.IN) # IR receiver
     # Specify the pins for increment and decrement switches
     increment_pin = 14  # Pin 14 for increment
     decrement_pin = 15  # Pin 15 for decrement
