@@ -7,6 +7,7 @@ from custom_neopixel import CustomNeoPixel
 from analog_buzzer import AnalogBuzzer
 from utils import get_activity_params
 from pin_mapping import get_trig_state
+import gc
 
 
 
@@ -77,7 +78,10 @@ def run_activity(activity):
     buzzer.play_tone(2000, 2)
     
 #     if is_led_used=="Enabled":
-        
+    temp=CustomNeoPixel(led_strip_pin,100,led_enabled)
+    temp.set_color_All(0,0,0)
+    del temp
+    gc.collect()
     led=CustomNeoPixel(led_strip_pin,num_pixels,led_enabled)
     led.clear()
    
@@ -161,12 +165,10 @@ def run_activity(activity):
 
     
 def red(num_pixels):
-    for i in range(num_pixels):
-        led.set_color(i,255,0,0)
+    led.set_color_All(255,0,0)
             
 def green(num_pixels):
-    for i in range(num_pixels):
-        led.set_color(i,0,255,0)
+    led.set_color_All(0,255,0)
             
 
 def gate_open():
@@ -184,4 +186,4 @@ def gate_close():
     time.sleep(.5)
 
     
-# run_activity("activity3")
+

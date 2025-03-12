@@ -8,7 +8,7 @@ from pin_mapping import *
 from custom_neopixel import CustomNeoPixel
 from drivers.display import *
 from drivers.oled import *
-
+import gc
 
 
 
@@ -31,7 +31,10 @@ def run_activity(activity):
     
     led_pin= int(params["led_pin"])
     led_num_pixels =int(params["led_num_pixels"])
-    
+    temp = CustomNeoPixel(pin=led_pin, num_pixels=100, enabled=led_strip_Enable)
+    temp.set_color_All(0,0,0)
+    del temp
+    gc.collect()
     Led_strip = CustomNeoPixel(pin=led_pin, num_pixels=led_num_pixels, enabled=led_strip_Enable)
 
     
@@ -42,6 +45,13 @@ def run_activity(activity):
     buzzer = AnalogBuzzer(pin_number=buzzer_pin,enOrDi=buzzer_enable)
     buzzer.play_tone(2000, 1)
     last=0
+    if sensor.value() ==sensor_trig:
+        oled_three_data(2,2,2,"Street","Light","ON")
+        Led_strip.set_color_All(255,255,255)
+    else:
+        oled_three_data(2,2,2,"Street","Light","OFF")
+        Led_strip.set_color_All(0,0,0)
+        
     while True: 
         if sensor.value() ==sensor_trig:
             if last==0:
@@ -61,5 +71,5 @@ def run_activity(activity):
                 buzzer.play_tone(2000, .2)
         time.sleep(.1)
      
-# run_activity("activity2")
+
 

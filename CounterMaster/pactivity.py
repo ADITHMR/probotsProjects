@@ -12,7 +12,7 @@ buzzer_pin=None
 timeout_duration = None
 buzzer=None
 
-    
+   
 def run_activity(activity):
     oled_two_data(1,1,"Starting","CountMaster")
     time.sleep(2)
@@ -54,6 +54,7 @@ def run_activity(activity):
     total_counts = 0
     is_entering = 0
     is_exiting = 0
+    oled_two_data(2,3,"COUNT",str(total_counts))
 
     # Main loop
     while True:
@@ -81,7 +82,7 @@ def run_activity(activity):
         #                     time.sleep(0.1)  
                             total_counts -= 1
                             print(f"Total count = {total_counts}")
-                            oled_two_data(1,2,"Count",str(total_counts))
+                            oled_two_data(2,3,"Count",str(total_counts))
                             is_exiting = 0  
                             buzzer.play_tone(2500, .5)                            
 #                             time.sleep(.2)  
@@ -93,7 +94,7 @@ def run_activity(activity):
         #                     time.sleep(0.1) 
                             total_counts += 1
                             print(f"Total count = {total_counts}")
-                            oled_two_data(1,2,"Count",str(total_counts))
+                            oled_two_data(2,3,"COUNT",str(total_counts))
                             is_entering = 0  
                             buzzer.play_tone(2500, .5)                            
 #                             time.sleep(.2)  
@@ -111,4 +112,4 @@ def run_activity(activity):
         except Exception as e:
             print(f"Error in CountMaster activity(): {e}")
 
-# run_activity("activity4")
+

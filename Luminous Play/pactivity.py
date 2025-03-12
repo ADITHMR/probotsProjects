@@ -8,6 +8,7 @@ from ir_rx.nec import NEC_8
 from utils import get_activity_params
 from drivers.oled import oled_two_data
 ir_receiver_enabled=None
+import gc
 
 class NeoPixelEffects:
     def __init__(self, pin, num_pixels, increment_pin, decrement_pin):
@@ -18,17 +19,47 @@ class NeoPixelEffects:
         self.old_ir_code = -1
         self.ir_code = 0
         self.loopExit = False
+        
+        temp=neopixel.NeoPixel(self.pin, 100)
+        temp.fill((0, 0, 0))  # More efficient to fill all pixels at once
+        temp.write()
+        
+        del temp
+        gc.collect()
 
         # Colors for rainbow effect
         self.rainbow_colors = [
-            (255, 0, 0),    # Red
-            (255, 127, 0),  # Orange
-            (255, 255, 0),  # Yellow
-            (0, 255, 0),    # Green
-            (0, 0, 255),    # Blue
-            (75, 0, 130),   # Indigo
-            (148, 0, 211)   # Violet
-        ]
+    (255, 0, 0),      # Red
+    (0, 255, 255),    # Cyan
+    (255, 127, 0),    # Orange
+    (75, 0, 130),     # Indigo
+    (255, 255, 0),    # Yellow
+    (173, 0, 255),    # Electric Violet
+    (0, 255, 0),      # Green
+    (255, 0, 127),    # Hot Pink
+    (0, 0, 255),      # Blue
+    (255, 191, 0),    # Yellow-Orange
+    (191, 0, 255),    # Purple-Magenta
+    (0, 255, 127),    # Aqua Green
+    (148, 0, 211),    # Violet
+    (255, 64, 0),     # Reddish-Orange
+    (0, 64, 255),     # Electric Blue
+    (127, 255, 0),    # Light Green
+    (255, 0, 255),    # Magenta
+    (0, 127, 255),    # Deep Sky Blue
+    (255, 64, 127),   # Deep Pink
+    (191, 255, 0),    # Yellow-Green
+    (37, 0, 224),     # Royal Blue
+    (255, 191, 224),  # Pinkish Lavender
+    (0, 255, 191),    # Turquoise
+    (208, 127, 255),  # Lavender
+    (0, 191, 255),    # Sky Blue
+    (255, 127, 191),  # Light Pink
+    (111, 0, 148),    # Dark Purple
+    (224, 191, 255),  # Light Lavender
+    (255, 0, 191),    # Neon Pink
+    (255, 191, 255)   # Soft Pink
+]
 
         # Setup the IR receiver
         
@@ -114,7 +145,7 @@ class NeoPixelEffects:
         """Makes the LEDs pulse in and out with a smooth brightness transition."""
         while not self.loopExit:
             for color in self.rainbow_colors:
-                for brightness in range(0, max_brightness + 1, 10):  # Increase brightness
+                for brightness in range(0, max_brightness + 1, 30):  # Increase brightness
                     for i in range(self.num_pixels):
                         self.np[i] = (int(color[0] * brightness / max_brightness), 
                                       int(color[1] * brightness / max_brightness), 
@@ -123,7 +154,7 @@ class NeoPixelEffects:
                     time.sleep(speed)
                     if self.check_for_exit():  # Check if IR code was received
                         return  # Exit the effect immediately when check_for_exit returns True
-                for brightness in range(max_brightness, -1, -5):  # Decrease brightness
+                for brightness in range(max_brightness, -1, -30):  # Decrease brightness
                     for i in range(self.num_pixels):
                         self.np[i] = (int(color[0] * brightness / max_brightness), 
                                       int(color[1] * brightness / max_brightness), 
@@ -155,7 +186,7 @@ class NeoPixelEffects:
                         return
                 self.led_write()
                 time.sleep(speed)
-    def colorful_fade_effect(self, fade_time=5):
+    def colorful_fade_effect(self, fade_time=1):
         """Smoothly fades through a set of rainbow colors."""
         while not self.loopExit:
             for i in range(len(self.rainbow_colors)):
@@ -206,7 +237,7 @@ class NeoPixelEffects:
                 if self.check_for_exit():
                     return
                 time.sleep(speed)
-    def ripple_effect(self, speed=0.1, ripple_size=5):
+    def ripple_effect(self, speed=0.01, ripple_size=1):
         """Creates a ripple effect moving across the LED strip."""
         while not self.loopExit:
             for color in self.rainbow_colors:
@@ -224,6 +255,7 @@ class NeoPixelEffects:
                     # Clear the ripple after it moves
                     for i in range(self.num_pixels):
                         self.np[i] = (0, 0, 0)
+
     def zigzag_effect(self,  speed=0.1):
         """Creates a zigzag motion across the LED strip."""
         while not self.loopExit:
@@ -279,7 +311,7 @@ class NeoPixelEffects:
         return False
     
 
-    def run(self):
+    def run(self,num_pixels):
         """Main loop to control the effect switching based on IR input."""
         while True:
             # Check for specific IR codes and switch effects
@@ -326,7 +358,7 @@ class NeoPixelEffects:
                 print("Switching to riplle effect")
                 self.loopExit = False
                 oled_two_data(2,2,"Ripple","Effect")
-                self.ripple_effect()
+                self.ripple_effect(ripple_size=num_pixels)
             if self.ir_code == 8:  # IR code for Circular Chase
                 print("Switching to ZigZag effect")
                 self.loopExit = False
@@ -357,9 +389,8 @@ def run_activity(activity):
     if ir_receiver_enabled=="Enabled":
         ir = NEC_8(pin_ir, callback)
     
-    
+   
     neo_effects = NeoPixelEffects(pin=led_pin, num_pixels=num_pixels, increment_pin=increment_pin, decrement_pin=decrement_pin)
     print("Starting 'Luminous Play: LED light magic' activity")
-    neo_effects.run()
+    neo_effects.run(num_pixels)
 
-    

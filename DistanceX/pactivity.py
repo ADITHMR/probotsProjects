@@ -36,6 +36,7 @@ def run_activity(activity):
 # Pin configuration
     trigger_pin = machine.Pin(trigger_pin_no, machine.Pin.OUT)  # Trigger pin (GPIO13)
     echo_pin = machine.Pin(echo_pin_no, machine.Pin.IN)     # Echo pin (GPIO12)
+    oled_three_data(2,2,2,"Distance","0.00","cm")
     while True:
         dist = int(measure_distance(trigger_pin,echo_pin))  # Measure the distance
         if dist>100:
@@ -48,5 +49,5 @@ def run_activity(activity):
 #         time.sleep(.5)  # Delay between measurements
 
 # Run the main loop
-# run_activity("activity1")
+
 

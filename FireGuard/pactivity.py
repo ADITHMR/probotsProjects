@@ -7,6 +7,7 @@ from machine import  Pin
 from pin_mapping import *
 from drivers.oled import *
 from drivers.display import  *
+import gc
 
 
 
@@ -33,27 +34,32 @@ def run_activity(activity):
     led_num_pixels =int(params["led_num_pixels"])
     
     buzzer = AnalogBuzzer(pin_number=buzzer_pin,enOrDi=buzzer_Enable)
+    temp = CustomNeoPixel(pin=led_pin, num_pixels=100, enabled=led_strip_Enable)
+    temp.set_color_All(0,0,0)
+    del temp
+    gc.collect()
     Led_strip = CustomNeoPixel(pin=led_pin, num_pixels=led_num_pixels, enabled=led_strip_Enable)
     buzzer.play_tone(2000, 0.3)
     print("Started 'FireGuard: Intelligent Fire Detection' activity")
     while True:
         while(fire_sensor.value()==fire_sensor_trig):
-            oled_three_data(2,2,2,"ALERT","Fire","Found")
+            oled_three_data(2,2,2,"ALERT","Fire","Detected")
             disp_seq_str(["FIRE"],0)
             #buzzer_on()
             Led_strip.set_color_All(255,0,0)
             #set_color_for(3,255, 0, 0)
-            buzzer.play_tone(2000, 0.3)
+            buzzer.play_tone(1500, 0.1)
+            buzzer.play_tone(2000, 0.2)
             
             oled_three_data(2,2,2,"ALERT","  ","  ")
             #buzzer_off()
             Led_strip.set_color_All(0,0,0)
-            time.sleep(.3)
+            time.sleep(.1)
         
         Led_strip.set_color_All(0,255,0)
         oled_two_data(1,3,"No Fire","SAFE")
         disp_seq_str(["SAFE"],0)
         
-#run_activity("activity5")
+
     
     
